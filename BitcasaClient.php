@@ -233,7 +233,7 @@ class BitcasaClient
 			$name = basename($filepath);
 		}
 
-		return $this->makeResult($this->http_put_file("/files" . $path,
+		return $this->singleResult($this->http_put_file("/files" . $path,
 													  array("exists" => $exists),
 													  $name, $filepath));
 	}
@@ -763,6 +763,7 @@ class BitcasaClient
 				$full_url .= $key . "=" . $value;
 			}
 		}
+
 		$r = new HttpRequest(($full_url), HttpRequest::METH_GET);
 
 		$r->send();
@@ -897,7 +898,10 @@ class BitcasaClient
 
 		$full_url .= $this->encodeArray($args, true);
 		$r = new HttpRequest(($full_url), HttpRequest::METH_POST);
+		$options = array('connecttimeout' => 300, // timeout on connect 
+                        'timeout'  => 300);
 
+		$r->setOptions($options);
 		$r->setPostFields($fields);
 		$r->addPostFile('file', $filepath);
 		$r->send();
@@ -1541,7 +1545,7 @@ class BitcasaFolder extends BitcasaItem {
 	 */
 	public function upload($client, $filepath, $name = NULL)
 	{
-		return $client->uploadFile($filepath, $anme);
+		return $client->uploadFile($this->getPath(), $filepath, $name);
 	}
 }
 

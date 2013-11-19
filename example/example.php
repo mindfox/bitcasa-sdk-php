@@ -5,7 +5,6 @@ include_once("BitcasaClient.php");
 $client_id = "";
 $secret = "";
 
-
 $client = new BitcasaClient();
 
 try {
@@ -139,6 +138,32 @@ try {
 	$bid = BitcasaInfiniteDrive::getInfiniteDrive($client);
 	$item = BitcasaItem::findByName("Welcome to Bitcasa.pdf", $items);
 	$result = $item->copy($client, $bid, "NewFile.pdf");
+}
+catch (Eception $ex) {
+	var_dump($ex);
+}
+
+echo "<table border=1>";
+?>
+<tr><th>Name</th><th>Mtime</th><th>Category</th><th>Path</th></tr>
+<?
+echo "<tr><td>" . $result->getName()
+. "</td><td>" . $result->getMTime()
+. "</td><td>" . $result->getType()
+. "</td><td>" . $result->getPath() . "</td></tr>";
+
+echo "</table>";
+
+
+/*
+ * EXAMPLE 7 - upload a file from BitcasaInfinteDrive
+ */
+echo "<h2>Example 7 - upload a file</h2>";
+
+
+try {
+	$bid = BitcasaInfiniteDrive::getInfiniteDrive($client);
+	$result = $bid->upload($client, "/etc/hosts", "UpFile.pdf");
 }
 catch (Eception $ex) {
 	var_dump($ex);
